@@ -4,8 +4,8 @@ import { io } from 'socket.io-client'
 import Peer from 'simple-peer'
 
 const SocketContext = createContext()
-
-const socket = io('http://localhost:5000')
+console.log(import.meta.env.VITE_URL_BE)
+const socket = io(import.meta.env.VITE_URL_BE || 'http://localhost:5000')
 
 const ContextProvider = ({ children }) => {
     const [stream, setStream] = useState(null)
