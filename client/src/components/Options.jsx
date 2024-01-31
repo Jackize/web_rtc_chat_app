@@ -29,7 +29,7 @@ const Options = ({ children }) => {
                             <Typography gutterBottom variant='h6'>Make a call</Typography>
                             <TextField label='ID to Call' value={idToCall} onChange={(e) => setIdToCall(e.target.value)} fullWidth />
                             {callAccepted && !callEnded ? (
-                                <Button variant='contained' color='secondary' startIcon={<PhoneDisabled fontSize='large' />} fullWidth onClick={leaveCall()} sx={{ marginTop: 2 }}>
+                                <Button variant='contained' color='secondary' startIcon={<PhoneDisabled fontSize='large' />} fullWidth onClick={() => leaveCall()} sx={{ marginTop: 2 }}>
                                     Hang Up
                                 </Button>
                             ) : (

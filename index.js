@@ -18,18 +18,24 @@ app.get("/", (req, res) => {
 })
 
 io.on('connection', (socket) => {
+    socket.join(1)
     socket.emit("me", socket.id)
 
-    socket.on("disconnect", () => {
-        socket.broadcast.emit("callended")
+    socket.on("offer", ({ userToCall, signal, from, name }) => {
+        socket.join(userToCall)
+        socket.to(userToCall).emit("offer", { signal, from, name })
     })
 
-    socket.on("callUser", ({ userToCall, signalData, from, name }) => {
-        io.to(userToCall).emit("callUser", { signal: signalData, from, name })
+    socket.on("answer", ({ roomId, signal, name }) => {
+        socket.to(roomId).emit("answer", signal, name)
     })
 
-    socket.on("answerCall", (data) => {
-        io.to(data.to).emit("callAccepted", data.signal)
+    socket.on('candidate', ({ roomId, candidate }) => {
+        socket.to(roomId).emit('candidate', candidate)
+    })
+
+    socket.on('hangUp', ({ roomId }) => {
+        socket.to(roomId).emit(true)
     })
 })
 
