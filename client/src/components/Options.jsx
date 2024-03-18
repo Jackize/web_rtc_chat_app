@@ -4,7 +4,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { SocketContext } from '../socketContext'
 import { Assignment, Phone, PhoneDisabled } from '@mui/icons-material'
 const Options = ({ children }) => {
-    const { name, callAccepted, me, setName, callEnded, leaveCall, callUser } = useContext(SocketContext)
+    const { name, callAccepted, me, setName, callEnded, leaveCall, callUser, getDisplayMedia } = useContext(SocketContext)
     const [idToCall, setIdToCall] = useState('')
 
     return (
@@ -14,6 +14,7 @@ const Options = ({ children }) => {
             padding: 0
         }}>
             <Paper elevation={10} sx={{ margin: "10px 20px", border: "2px solid black" }}>
+                <h2>{me}</h2>
                 <form noValidate autoComplete='off' style={{ display: 'flex', flexDirection: "column" }}>
                     <Grid container width={'100%'}>
                         <Grid item xs={12} md={6} padding={2}>
@@ -29,9 +30,14 @@ const Options = ({ children }) => {
                             <Typography gutterBottom variant='h6'>Make a call</Typography>
                             <TextField label='ID to Call' value={idToCall} onChange={(e) => setIdToCall(e.target.value)} fullWidth />
                             {callAccepted && !callEnded ? (
-                                <Button variant='contained' color='secondary' startIcon={<PhoneDisabled fontSize='large' />} fullWidth onClick={() => leaveCall()} sx={{ marginTop: 2 }}>
-                                    Hang Up
-                                </Button>
+                                <>
+                                    <Button variant='contained' color='secondary' startIcon={<PhoneDisabled fontSize='large' />} fullWidth onClick={() => leaveCall()} sx={{ marginTop: 2 }}>
+                                        Hang Up
+                                    </Button>
+                                    <Button variant='contained' color='secondary' startIcon={<PhoneDisabled fontSize='large' />} fullWidth onClick={() => getDisplayMedia()} sx={{ marginTop: 2 }}>
+                                        Share screen
+                                    </Button>
+                                </>
                             ) : (
                                 <Button variant='contained' color='primary' startIcon={<Phone fontSize='large' />} fullWidth onClick={() => callUser(idToCall)} sx={{ marginTop: 2 }}>
                                     Call

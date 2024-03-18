@@ -18,24 +18,29 @@ app.get("/", (req, res) => {
 })
 
 io.on('connection', (socket) => {
-    socket.join(1)
     socket.emit("me", socket.id)
+    console.log("connected", socket.id);
 
     socket.on("offer", ({ userToCall, signal, from, name }) => {
-        socket.join(userToCall)
+        console.log(from, "offer-userToCall", userToCall)
+        // socket.join(userToCall)
         socket.to(userToCall).emit("offer", { signal, from, name })
     })
 
-    socket.on("answer", ({ roomId, signal, name }) => {
-        socket.to(roomId).emit("answer", signal, name)
+    socket.on("answer", ({ roomId, signal, name, from }) => {
+        console.log(from, "answer-roomId", roomId)
+        // socket.join(roomId)
+        socket.to(roomId).emit("answer", {  signal, name, from  })
     })
 
     socket.on('candidate', ({ roomId, candidate }) => {
+        // console.log("candidate-roomId", roomId)
         socket.to(roomId).emit('candidate', candidate)
     })
 
-    socket.on('hangUp', ({ roomId }) => {
-        socket.to(roomId).emit(true)
+    socket.on('hangUp', ({ userToCall, from }) => {
+        console.log(from, "from-hangUp-userToCall", userToCall)
+        socket.to(userToCall).emit("hangUp", { isStopCall: true, from })
     })
 })
 
